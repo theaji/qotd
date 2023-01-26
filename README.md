@@ -1,2 +1,3 @@
-# qotd
+# QOTD
+
 Serverless quote of the day project using Lambda and SNS

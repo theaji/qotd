@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "qotd-stack"
+s3_bucket ="samplebucket"
+s3_prefix = "qotd-stack"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Email=\"/dev/subscriber-email\""
+image_repositories = []

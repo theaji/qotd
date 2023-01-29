@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless QOTD application using Lambda and SNS
+
+#Section 1
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+
+
+Parameters:
+  Email:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: '/dev/subscriber-email'
+    Description: The email address to receive alerts
+
+Resources:
+
+#Section 2
+  QotdTopic:
+    Type: AWS::SNS::Topic
+
+  AlarmSubscriberEmail:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !Ref Email
+      Protocol: email
+      TopicArn: !Ref QotdTopic
+
+#Section 3
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt GetFunctionRole.Arn 
+      CodeUri: getFunction/
+      Handler: index.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+          TOPIC: !Ref QotdTopic
+
+  #EventBridge rule to trigger function every day at 8am EST          
+  ScheduledFunction:
+    Type: AWS::Events::Rule
+    Properties: 
+      ScheduleExpression: cron(0 15 * * ? *)
+      State: ENABLED
+      Targets: 
+        - Arn: !GetAtt GetFunction.Arn
+          Id: GetFunction
+
+#Section 4
+  GetFunctionRole:
+    Type: AWS::IAM::Role 
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement: 
+          - Effect: Allow
+            Action: sts:AssumeRole 
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      Path: /
+      Policies:
+        - PolicyName: SNSPublish
+          PolicyDocument: 
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource:
+                  - !Ref QotdTopic
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+ 
+  EventsPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref GetFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ScheduledFunction.Arn
+
+Outputs:
+  TopicArn:
+    Description: SNS topic ARN
+    Value: !Ref QotdTopic
+  GetFunctionArn:
+    Description: Lambda Function ARN
+    Value: !GetAtt GetFunction.Arn

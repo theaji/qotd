@@ -86,9 +86,9 @@ The EventBridge rule was set to trigger the Lambda function daily at 8am EST
 
 ## Section 4
 
-Create IAM role to allow Lambda to publish to SNS.
+Create IAM role to allow Lambda to publish to SNS. A managed AWS policy is used here to allow Lambda write access to CloudWatch logs.
 
-Also add permission to allow EventBridge to invoke the Lambda function.
+This sections also adds permission to allow EventBridge to invoke the Lambda function.
 
 ```
   GetFunctionRole:

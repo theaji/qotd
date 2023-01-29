@@ -8,7 +8,7 @@ EventBridge | IAM | Lambda | SNS
 
 ## Prerequisites:
 
-- Installed [SAM CLI] (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
+- Installed [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
 - Ran sam init && sam deploy --guided
 
 ## Template explanation:

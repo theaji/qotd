@@ -17,7 +17,7 @@ EventBridge | IAM | Lambda | SNS
 
 ## Template explanation:
 
-## Section 1:
+### Section 1:
 
 Set the memory and timeout value for the Lambda function. I increased this from the default 3 seconds timeout while troubleshooting an issue with the json response
 
@@ -37,7 +37,7 @@ Parameters:
 
 ```
 
-## Section 2
+### Section 2
 
 Create the SNS topic and specify the subscriber
 
@@ -54,14 +54,14 @@ Create the SNS topic and specify the subscriber
 
 ```
 
-## Section 3
+### Section 3
 
 Create the Lambda function and EventBridge rule. The Lambda function code is in the getFunction/index.py file
 
 The EventBridge rule was set to trigger the Lambda function daily at 8am EST 
 
 ```
-#Section 3
+
   GetFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -88,7 +88,7 @@ The EventBridge rule was set to trigger the Lambda function daily at 8am EST
 
 ```
 
-## Section 4
+### Section 4
 
 Create IAM role to allow Lambda to publish to SNS. A managed AWS policy is used here to allow Lambda write access to CloudWatch logs.
 
@@ -133,19 +133,25 @@ This sections also adds permission to allow EventBridge to invoke the Lambda fun
 
 ## Challenges & Troubleshooting
 
-- I experienced errors while trying to use the requests module with Lamda. I was able to resolve this by opting for the urllib3 module instead.
+I experienced errors while trying to use the requests module with Lamda. I was able to resolve this by opting for the urllib3 module instead.
 
-- Test Lambda function locally:
+### Commands
+
+Test Lambda function locally:
 
 `sam local invoke getFunction --event /events/event.json`
 
-- View Lambda function logs:
+View Lambda function logs:
 
 `sam logs -n getFunction --stack-name qotd-stack --tail`
 
-- Validate Cloudformation templates:
+Validate Cloudformation template:
 
 `cfn-lint template.yml` and/or `sam validate`
+
+Deploy template:
+
+`sam build && sam deploy`
 
 
 

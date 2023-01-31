@@ -80,7 +80,7 @@ The EventBridge rule was set to trigger the Lambda function daily at 8am EST
   ScheduledFunction:
     Type: AWS::Events::Rule
     Properties: 
-      ScheduleExpression: cron(0 15 * * ? *)
+      ScheduleExpression: cron(0 13 * * ? *)
       State: ENABLED
       Targets: 
         - Arn: !GetAtt GetFunction.Arn

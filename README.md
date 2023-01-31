@@ -2,6 +2,10 @@
 
 Serverless project to automatically send a quote of the day to subscribers using Lambda and SNS
 
+## Architecture
+
+![qotd](https://user-images.githubusercontent.com/117802776/215669404-e20e1c5b-0720-455e-8983-fb94cf678f03.png)
+
 ## Services covered:
 
 EventBridge | IAM | Lambda | SNS
